@@ -66,10 +66,11 @@ define( 'MSFT_AZURE_PLUGIN_VERSION', '3.0.1' );
 $path = MSFT_AZURE_PLUGIN_PATH . 'library/dependencies';
 set_include_path( get_include_path() . PATH_SEPARATOR . $path );
 
-require_once MSFT_AZURE_PLUGIN_PATH . 'library/WindowsAzure/WindowsAzure.php';
+require_once MSFT_AZURE_PLUGIN_PATH . "vendor/autoload.php";
 require_once MSFT_AZURE_PLUGIN_PATH . 'windows-azure-storage-settings.php';
 require_once MSFT_AZURE_PLUGIN_PATH . 'windows-azure-storage-dialog.php';
 require_once MSFT_AZURE_PLUGIN_PATH . 'windows-azure-storage-util.php';
+
 
 // Check prerequisite for plugin
 register_activation_hook( __FILE__, 'check_prerequisite' );
@@ -157,13 +158,13 @@ if ( function_exists( 'wp_calculate_image_srcset' ) ) {
  */
 function check_prerequisite() {
 	//TODO more robust activation checks. http://pento.net/2014/02/18/dont-let-your-plugin-be-activated-on-incompatible-sites/
-	$windowsAzureFilePath = wp_normalize_path( WP_PLUGIN_DIR . '/windows-azure-storage/library/WindowsAzure/WindowsAzure.php' );
+	$windowsAzureFilePath = wp_normalize_path( WP_PLUGIN_DIR . '/windows-azure-storage/vendor/autoload.php' );  
 	if ( ( true === file_exists( $windowsAzureFilePath ) ) && ( true === is_readable( $windowsAzureFilePath ) ) ) {
 		return;
 	}
 
 	// Windows Azure SDK for PHP is not available
-	$message = '<p style="color: red"><a href="https://github.com/windowsazure/azure-sdk-for-php/">'
+	$message = '<p style="color: red"><a href="https://github.com/Azure/azure-storage-php">'   
 	           . 'Windows Azure SDK for PHP</a> is not found. '
 	           . 'Please download and copy the Windows Azure SDK for PHP to library directory and dependencies to '
 	           . 'the dependencies directory.</p>';

@@ -42,7 +42,7 @@
  * @link      http://www.microsoft.com
  */
 
-use WindowsAzure\Blob\Models\PublicAccessType;
+use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
 
 /**
  * Wordpress hook for displaying plugin options page
@@ -281,8 +281,10 @@ function show_windows_azure_storage_settings( $mode ) {
 			<th scope="row">
 				<label for="azure_storage_account_primary_access_key" title="Windows Azure Storage Account Primary Access Key">Primary Access Key</label>
 			</th>
-			<td>
+			<td style=" width : 500px">
+			 <!-- ///////////////////////////    List all containers       /////////////////////////////  -->
 				<input type="text" name="azure_storage_account_primary_access_key" title="Windows Azure Storage Account Primary Access Key" value="<?php echo esc_attr( $storageAccountKey ); ?>" />
+				<input type="button" class="button-primary" value="List containers" onclick="<?php echo esc_js( sprintf( 'listAllContainer();') ); ?>" />
 			</td>
 			<td></td>
 		</tr>
@@ -312,7 +314,10 @@ function show_windows_azure_storage_settings( $mode ) {
 					?>
 				</select>
 			</td>
-			<?php if ( WindowsAzureStorageUtil::check_action_permissions( 'create_container' ) ) :
+			
+			
+			<?php  
+				if ( WindowsAzureStorageUtil::check_action_permissions( 'create_container' ) ) :
 				wp_nonce_field( 'create_container', 'create_new_container_settings' );
 				?>
 				<td>
@@ -331,6 +336,9 @@ function show_windows_azure_storage_settings( $mode ) {
 					</div>
 				</td>
 			<?php endif; ?>
+			
+			
+			
 		</tr>
 		<tr valign="top">
 			<td colspan="3" WIDTH="300" align="center"><?php echo wp_kses_post( $message ); ?></td>
@@ -458,9 +466,11 @@ function show_windows_azure_storage_settings( $mode ) {
 	if ( empty( $ContainerResult ) || ! $containerCreationStatus || 0 === count( $ContainerResult->getContainers() ) ) {
 		// 1. If $containerResult object is null means the storage account is not yet set
 		// show the create container div
+	    ///////////////////////////    I think this mena       ///////////////////////////// 
+		
 		?>
 		<script type="text/javascript">
-			onContainerSelectionChanged( true );
+			onContainerSelectionChanged( false );
 		</script>
 
 		<?php

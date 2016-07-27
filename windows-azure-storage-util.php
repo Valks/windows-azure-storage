@@ -43,17 +43,18 @@
  */
 
 // import namepaces required for consuming Azure Blob Storage
-use WindowsAzure\Blob\Models\BlobBlockType;
-use WindowsAzure\Blob\Models\Block;
-use WindowsAzure\Blob\Models\CommitBlobBlocksOptions;
-use WindowsAzure\Blob\Models\CreateBlobOptions;
-use WindowsAzure\Blob\Models\CreateContainerOptions;
-use WindowsAzure\Blob\Models\ListContainersOptions;
-use WindowsAzure\Blob\Models\PublicAccessType;
-use WindowsAzure\Common\Internal\IServiceFilter;
-use windowsazure\common\Internal\Resources;
-use WindowsAzure\Common\ServiceException;
-use WindowsAzure\Common\ServicesBuilder;
+use MicrosoftAzure\Storage\Blob\Models\BlobBlockType;
+use MicrosoftAzure\Storage\Blob\Models\Block;
+use MicrosoftAzure\Storage\Blob\Models\CommitBlobBlocksOptions;
+use MicrosoftAzure\Storage\Blob\Models\CreateBlobOptions;
+use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
+use MicrosoftAzure\Storage\Blob\Models\ListContainersOptions;
+use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
+use MicrosoftAzure\Storage\Common\Internal\IServiceFilter;
+use MicrosoftAzure\Storage\Common\Internal\Resources;
+use MicrosoftAzure\Storage\Common\ServiceException;
+use MicrosoftAzure\Storage\Common\ServicesBuilder;
+
 
 /**
  * Used for performing operations on Windows Azure Blob Storage
@@ -255,7 +256,7 @@ class WindowsAzureStorageUtil {
 	 */
 	public static function deleteBlob( $containerName, $blobName ) {
 		$blobRestProxy = WindowsAzureStorageUtil::getStorageClient();
-		if ( self::blobExists( $containerName, $blobName ) ) {
+		if ( self::blob_exists_in_container( $blobName, $containerName ) ) {
 			$blobRestProxy->deleteBlob( $containerName, $blobName );
 		}
 	}
@@ -448,8 +449,8 @@ class WindowsAzureStorageUtil {
 			$blobName2 = ( '' === $uploadSubDir ) ? $filename2 : $uploadSubDir . '/' . $filename2;
 
 			// check for both lower and upper case extension or image sub-sizes may be overwritten
-			while ( WindowsAzureStorageUtil::blobExists( $container, $blobName )
-			        || WindowsAzureStorageUtil::blobExists( $container, $blobName2 ) ) {
+			while ( WindowsAzureStorageUtil::blob_exists_in_container( $blobName, $container )
+			        || WindowsAzureStorageUtil::blob_exists_in_container( $blobName2, $container ) ) {
 				$new_number = $number + 1;
 				$filename   = str_replace( "$number$ext", "$new_number$ext", $filename );
 				$filename2  = str_replace( "$number$ext2", "$new_number$ext2", $filename2 );
@@ -460,8 +461,8 @@ class WindowsAzureStorageUtil {
 
 			return $blobName2;
 		}
-
-		while ( WindowsAzureStorageUtil::blobExists( $container, $blobName ) ) {
+		
+		while ( WindowsAzureStorageUtil::blob_exists_in_container( $blobName, $container ) ) {
 			if ( '' === "$number$ext" ) {
 				$filename = $filename . ++ $number . $ext;
 			} else {
@@ -612,7 +613,7 @@ class WindowsAzureStorageUtil {
 		$result = false;
 		try {
 			$blob_properties = $client->getBlobProperties( $container_name, $blob_name );
-			if ( $blob_properties instanceof \WindowsAzure\Blob\Models\GetBlobPropertiesResult ) {
+			if ( $blob_properties instanceof \MicrosoftAzure\Storage\Blob\Models\GetBlobPropertiesResult ) {
 				$result = true;
 			}
 		} catch ( \Exception $exception ) {

@@ -460,7 +460,11 @@ function windows_azure_storage_dialog_browse_tab() {
 										'filename'           => $blob->getName(),
 										'selected_container' => $selected_container_name,
 									), MSFT_AZURE_PLUGIN_LEGACY_MEDIA_URL );
+									
 									$delete_blob_url = wp_nonce_url( $delete_blob_url, 'delete_blob_' . $post_id, 'delete_blob' );
+									/////////////////////////////////////////////////////////////////////
+									//this nonce must be added, otherwise the deletion will fail
+									$delete_blob_url = wp_nonce_url( $delete_blob_url, 'browse_select_container_' . $post_id, 'browse_select_container_nonce' );
 									/* translators: 1: URL, 2: link description, 3: link text */
 									printf(
 										'<a class="delete-permanently" href="%1$s" role="button" title="%2$s" aria-label="%2$s">%3$s</a>',
@@ -497,7 +501,12 @@ function windows_azure_storage_dialog_browse_tab() {
 			), MSFT_AZURE_PLUGIN_LEGACY_MEDIA_URL );
 			?>
 			<form name="DeleteAllBlobsForm" method="POST" action="<?php echo esc_url( $form_action_url ); ?>">
-				<?php wp_nonce_field( 'delete_all_blobs_' . $post_id, 'delete_all_blobs_nonce' ); ?>
+				<?php 
+					wp_nonce_field( 'delete_all_blobs_' . $post_id, 'delete_all_blobs_nonce' ); 
+					//////////////////////////////////////////////////////////////////////////
+					//this nonce must be added, otherwise the deletion will fail
+					wp_nonce_field( 'browse_select_container_' . $post_id, 'browse_select_container_nonce' );
+				?>
 				<input type='hidden' name='selected_container' value='<?php echo esc_attr( $selected_container_name ); ?>' />
 				<?php
 				submit_button(
@@ -844,7 +853,7 @@ function windows_azure_storage_dialog_upload_tab() {
  */
 function deleteBlob( $containerName, $blobName ) {
 	try {
-		if ( WindowsAzureStorageUtil::blobExists( $containerName, $blobName ) ) {
+		if ( WindowsAzureStorageUtil::blob_exists_in_container( $blobName, $containerName ) ) {
 			$_SERVER['REQUEST_URI'] = remove_query_arg(
 				array(
 					'delete_blob',
