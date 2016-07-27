@@ -42,7 +42,7 @@
  * @link      http://www.microsoft.com
  */
 
-use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
+use WindowsAzure\Blob\Models\PublicAccessType;
 
 /**
  * Wordpress hook for displaying plugin options page
