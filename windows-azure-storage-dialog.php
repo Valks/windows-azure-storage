@@ -96,8 +96,8 @@ function windows_azure_storage_dialog_add_tab( $tabs ) {
  */
 function windows_azure_storage_dialog_browse_tab() {
 	// remove all registerd filters for the tabs
-	//TODO: switch to remove_all_filters('media_upload_tabs') and only call it once
-	unset( $GLOBALS['wp_filter']['media_upload_tabs'] );
+	//TODO: switch to remove_all_filters('media_upload_tabs') and only call it once\
+	//unset( $GLOBALS['wp_filter']['media_upload_tabs'] );
 
 	// register our filter for the tabs
 	add_filter( "media_upload_tabs", "windows_azure_storage_dialog_add_tab" );
@@ -460,10 +460,8 @@ function windows_azure_storage_dialog_browse_tab() {
 										'filename'           => $blob->getName(),
 										'selected_container' => $selected_container_name,
 									), MSFT_AZURE_PLUGIN_LEGACY_MEDIA_URL );
-									
 									$delete_blob_url = wp_nonce_url( $delete_blob_url, 'delete_blob_' . $post_id, 'delete_blob' );
 									/////////////////////////////////////////////////////////////////////
-									//this nonce must be added, otherwise the deletion will fail
 									$delete_blob_url = wp_nonce_url( $delete_blob_url, 'browse_select_container_' . $post_id, 'browse_select_container_nonce' );
 									/* translators: 1: URL, 2: link description, 3: link text */
 									printf(
@@ -504,7 +502,6 @@ function windows_azure_storage_dialog_browse_tab() {
 				<?php 
 					wp_nonce_field( 'delete_all_blobs_' . $post_id, 'delete_all_blobs_nonce' ); 
 					//////////////////////////////////////////////////////////////////////////
-					//this nonce must be added, otherwise the deletion will fail
 					wp_nonce_field( 'browse_select_container_' . $post_id, 'browse_select_container_nonce' );
 				?>
 				<input type='hidden' name='selected_container' value='<?php echo esc_attr( $selected_container_name ); ?>' />

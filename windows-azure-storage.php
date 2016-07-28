@@ -71,7 +71,6 @@ require_once MSFT_AZURE_PLUGIN_PATH . 'windows-azure-storage-settings.php';
 require_once MSFT_AZURE_PLUGIN_PATH . 'windows-azure-storage-dialog.php';
 require_once MSFT_AZURE_PLUGIN_PATH . 'windows-azure-storage-util.php';
 
-
 // Check prerequisite for plugin
 register_activation_hook( __FILE__, 'check_prerequisite' );
 
@@ -146,10 +145,12 @@ add_filter(
 // Hook for handling deleting media files from standard WordpRess dialog
 add_action( 'delete_attachment', 'windows_azure_storage_delete_attachment' );
 
+
 // Filter the 'srcset' attribute in 'the_content' introduced in WP 4.4.
 if ( function_exists( 'wp_calculate_image_srcset' ) ) {
 	add_filter( 'wp_calculate_image_srcset', 'windows_azure_storage_wp_calculate_image_srcset', 9, 5 );
 }
+
 
 /**
  * Check prerequisite for the plugin and report error
@@ -719,6 +720,8 @@ function windows_azure_storage_plugin_menu() {
  * @param int    $attachment_id Image attachment ID or 0.
  * @return array The filtered $sources array.
  */
+ 
+ 
 function windows_azure_storage_wp_calculate_image_srcset( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
 	$media_info = get_post_meta( $attachment_id, 'windows_azure_storage_info', true );
 
@@ -752,3 +755,40 @@ function windows_azure_storage_wp_calculate_image_srcset( $sources, $size_array,
 
 	return $sources;
 }
+
+
+/*
+function windows_azure_storage_wp_calculate_image_srcset( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
+	$media_info = get_post_meta( $attachment_id, 'windows_azure_storage_info', true );
+
+	// If a CNAME is configured, make sure only 'http' is used for the protocol.
+	$azure_cname       = WindowsAzureStorageUtil::getCNAME();
+	$esc_url_protocols = ! empty ( $azure_cname ) ? array( 'https', 'http', '//' ) : null;
+
+	if ( ! empty( $media_info ) ) {
+		$base_url = trailingslashit( WindowsAzureStorageUtil::get_storage_url_base( false ) .
+		                             $media_info['container'] );
+
+		foreach ( $sources as &$source ) {
+			$img_filename = substr( $source['url'], strrpos( $source['url'], '/' ) + 1 );
+
+			if ( substr( $media_info['blob'], strrpos( $media_info['blob'], '/' ) ) === $img_filename ) {
+				$source['url'] = esc_url( $base_url . $media_info['blob'], $esc_url_protocols );
+			} else {
+				foreach ( $media_info['thumbnails'] as $thumbnail ) {
+					if ( substr( $thumbnail, strrpos( $thumbnail, '/' ) ) === $img_filename ) {
+						$source['url'] = esc_url( $base_url . $thumbnail, $esc_url_protocols );
+						break;
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	return $sources;
+}
+*/

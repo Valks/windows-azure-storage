@@ -19,9 +19,10 @@ infrastructure for a content delivery.
 For more details on Windows Azure Storage, please visit the <a href="https://azure.microsoft.com/en-us/services/storage/">Microsoft Azure website</a>.
 
 == Installation ==
-1. Upload the plugin files to the `/wp-content/plugins/windows-azure-storage` directory, or install the plugin through the WordPress plugins screen directly.
-1. Activate the plugin through the 'Plugins' screen in WordPress.
-1. Use the Settings->Windows Azure screen to configure the plugin.
+1. Upload the plugin files to the `/wp-content/plugins/windows-azure-storage` directory.
+2. Download composer.phar in `/wp-content/plugins/windows-azure-storage` directory. Open a command prompt and execute "php composer.phar install".
+3. Activate the plugin through the 'Plugins' screen in WordPress.
+4. Use the Settings->Windows Azure screen to configure the plugin.
 
 == Changelog ==
 

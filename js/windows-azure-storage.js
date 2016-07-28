@@ -1,10 +1,9 @@
 /* global windowsAzureStorageSettings:false, tinyMCE:true */
 
-function listAllContainer() {
+function listAllContainers() {
 	var htmlForm = document.getElementsByName( 'SettingsForm' )[0];
 	htmlForm.submit();
 }
-
 
 function createContainer( url ) {
 	var htmlForm = document.getElementsByName( 'SettingsForm' )[0];
