@@ -180,6 +180,15 @@ class WindowsAzureStorageUtil {
 	}
 
 	/**
+	 * Get Blob Cache Control header
+	 *
+	 * @return string used for Cache-Control HTTP header of stored blob
+	 */
+	public static function getBlobCacheControl() {
+		return get_option( 'azure_storage_blob_cache_control' );
+	}
+
+	/**
 	 * Create blob storage client using Azure SDK for PHP
 	 *
 	 * @param string $accountName   Windows Azure Storage account name
@@ -208,6 +217,7 @@ class WindowsAzureStorageUtil {
 		$httpProxyPort      = WindowsAzureStorageUtil::getHttpProxyPort();
 		$httpProxyUserName  = WindowsAzureStorageUtil::getHttpProxyUserName();
 		$httpProxyPassword  = WindowsAzureStorageUtil::getHttpProxyPassword();
+		$blobCacheControl   = WindowsAzureStorageUtil::getBlobCacheControl();
 		// Parameters take precedence over settings in the db
 		if ( $accountName ) {
 			$storageAccountName = $accountName;
@@ -511,11 +521,13 @@ class WindowsAzureStorageUtil {
 
 		/** @var \WindowsAzure\Blob\BlobRestProxy $blobRestProxy */
 		$blobRestProxy = WindowsAzureStorageUtil::getStorageClient();
+		$blobCacheControl = WindowsAzureStorageUtil::getBlobCacheControl();
 		try {
 			if ( filesize( $localFileName ) < self::MAX_BLOB_SIZE ) {
 				$createBlobOptions = new CreateBlobOptions();
 				$createBlobOptions->setBlobContentType( $blobContentType );
 				$createBlobOptions->setMetadata( $metadata );
+				if ( $blobCacheControl ) $createBlobOptions->setBlobCacheControl( $blobCacheControl );
 				$blobRestProxy->createBlockBlob( $containerName, $blobName, $handle, $createBlobOptions );
 				fclose( $handle );
 			} else {

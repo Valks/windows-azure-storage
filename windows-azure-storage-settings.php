@@ -116,6 +116,7 @@ function windows_azure_storage_plugin_register_settings() {
 	register_setting( 'windows-azure-storage-settings-group', 'http_proxy_username', 'sanitize_text_field' );
 	register_setting( 'windows-azure-storage-settings-group', 'http_proxy_password', 'sanitize_text_field' );
 	register_setting( 'windows-azure-storage-settings-group', 'azure_storage_allow_per_user_settings', 'wp_validate_boolean' );
+	register_setting( 'windows-azure-storage-settings-group', 'azure_storage_blob_cache_control', 'sanitize_text_field' );
 }
 
 /**
@@ -186,6 +187,7 @@ function show_windows_azure_storage_settings( $mode ) {
 	$httpProxyPort      = WindowsAzureStorageUtil::getHttpProxyPort();
 	$httpProxyUserName  = WindowsAzureStorageUtil::getHttpProxyUserName();
 	$httpProxyPassword  = WindowsAzureStorageUtil::getHttpProxyPassword();
+	$blobCacheControl   = WindowsAzureStorageUtil::getBlobCacheControl();
 	$defaultContainer   = WindowsAzureStorageUtil::getDefaultContainer();
 	$newContainerName   = null;
 	// Use the account settings in the $_POST if this page load is
@@ -454,6 +456,16 @@ function show_windows_azure_storage_settings( $mode ) {
 				<br />
 				<small>Note: Uncheck this to revert back to using your own web host for storage at anytime.</small>
 			</td>
+			<tr valign="top">
+				<th scope="row">
+					<label for="azure_storage_blob_cache_control" title="Blob Cache Control HTTP Header">Cache-Control Header</label>
+				</th>
+				<td>
+					<input type="text" name="azure_storage_blob_cache_control" title="Blob Cache Control HTTP Header" value="<?php echo esc_attr($blobCacheControl); ?>" />
+				</td>
+				<td>
+				</td>
+			</tr>
 		</tr>
 	</table>
 	<?php

@@ -3,6 +3,7 @@
  * Plugin Name: Windows Azure Storage for WordPress
  * Plugin URI: https://wordpress.org/plugins/windows-azure-storage/
  * Description: Use the Windows Azure Storage service to host your website's media files.
+ *   Includes patch to enable custom Cache-Control header
  * Version: 3.0.1
  * Author: 10up, Microsoft Open Technologies
  * Author URI: http://10up.com/
